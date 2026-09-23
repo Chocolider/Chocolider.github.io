@@ -21,24 +21,16 @@
             margin: 0; padding: 0; padding-bottom: 70px;
         }
 
-        /* Общие стили */
         .page { display: none; padding: 0 15px; }
         .page.active { display: block; }
-        .page-title { padding-top: 15px; margin-bottom: 20px; }
+        .page-title { padding-top: 15px; margin-bottom: 15px; }
 
         /* Поиск и Категории */
         .header-section { padding: 15px; position: sticky; top: 0; background: var(--bg-color); z-index: 10; }
-        .search-bar {
-            width: 100%; padding: 10px; border-radius: 10px; border: none;
-            background: var(--secondary-bg); color: var(--text-color); outline: none;
-            box-sizing: border-box; margin-bottom: 15px; font-size: 16px;
-        }
+        .search-bar { width: 100%; padding: 10px; border-radius: 10px; border: none; background: var(--secondary-bg); color: var(--text-color); margin-bottom: 15px; font-size: 16px; box-sizing: border-box; }
         .categories { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
         .categories::-webkit-scrollbar { display: none; }
-        .cat-chip {
-            padding: 6px 15px; background: var(--secondary-bg); border-radius: 16px;
-            white-space: nowrap; font-size: 14px; cursor: pointer;
-        }
+        .cat-chip { padding: 6px 15px; background: var(--secondary-bg); border-radius: 16px; white-space: nowrap; font-size: 14px; cursor: pointer; }
         .cat-chip.active { background: var(--button-color); color: var(--button-text); }
 
         /* Сетка товаров */
@@ -47,29 +39,36 @@
         .product-img { width: 100%; height: 120px; background: #e0e0e0; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; font-size: 40px; }
         .product-title { font-size: 14px; font-weight: bold; margin: 0 0 5px 0; }
         .product-price { font-size: 14px; color: var(--button-color); margin-bottom: 10px; font-weight: bold;}
-        .add-btn { margin-top: auto; padding: 8px; border: none; border-radius: 8px; background: var(--button-color); color: var(--button-text); font-weight: bold; cursor: pointer; }
-        
-        /* Кнопка лайка */
-        .fav-btn { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.8); border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .add-btn { margin-top: auto; padding: 8px; border: none; border-radius: 8px; background: var(--button-color); color: var(--button-text); font-weight: bold; cursor: pointer; width: 100%; }
+        .fav-btn { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
-        /* Элементы корзины */
+        /* Корзина */
         .cart-item { display: flex; justify-content: space-between; align-items: center; background: var(--secondary-bg); padding: 15px; border-radius: 10px; margin-bottom: 10px; }
         .cart-controls { display: flex; gap: 15px; align-items: center; }
         .cart-btn { background: var(--button-color); color: var(--button-text); border: none; border-radius: 5px; width: 28px; height: 28px; font-weight: bold; font-size: 16px; }
 
-        /* Профиль */
-        .profile-card { background: var(--secondary-bg); padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 20px; }
-        .profile-avatar { width: 80px; height: 80px; background: var(--button-color); color: var(--button-text); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 15px auto; }
-        .profile-name { font-size: 20px; font-weight: bold; margin: 0 0 5px 0; }
-        .profile-username { color: var(--hint-color); margin: 0; }
-        .profile-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--hint-color); background: var(--bg-color); color: var(--text-color); box-sizing: border-box; margin-bottom: 15px; }
+        /* ПРОФИЛЬ: Новые стили */
+        .profile-section { background: var(--secondary-bg); padding: 15px; border-radius: 12px; margin-bottom: 15px; }
+        .profile-section h3 { margin: 0 0 15px 0; font-size: 16px; }
+        
+        .input-group { margin-bottom: 12px; }
+        .input-group label { display: block; font-size: 12px; color: var(--hint-color); margin-bottom: 5px; }
+        .profile-input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--hint-color); background: var(--bg-color); color: var(--text-color); box-sizing: border-box; font-size: 14px; }
+        
+        /* Блок заказа в истории */
+        .order-history-card { border-left: 4px solid var(--button-color); background: var(--bg-color); padding: 10px; border-radius: 6px; margin-bottom: 10px; font-size: 14px; }
+        .order-date { color: var(--hint-color); font-size: 12px; margin-bottom: 5px; }
+        
+        /* Контакты */
+        .contact-link { display: block; padding: 12px; background: var(--bg-color); border-radius: 8px; text-decoration: none; color: var(--text-color); margin-bottom: 8px; font-weight: bold; }
+        .policy-text { font-size: 12px; color: var(--hint-color); text-align: center; margin-top: 20px; }
 
         /* Нижняя навигация */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--secondary-bg); display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 12px; color: var(--hint-color); cursor: pointer; background: none; border: none; width: 20%; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--secondary-bg); display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 12px; color: var(--hint-color); cursor: pointer; background: none; border: none; width: 25%; }
         .nav-item.active { color: var(--button-color); }
         .nav-icon { font-size: 20px; margin-bottom: 3px; }
-        .badge { position: absolute; top: 0; right: 20%; background: #ff3b30; color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; display: none; }
+        .badge { position: absolute; top: 0; right: 25%; background: #ff3b30; color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; display: none; }
     </style>
 </head>
 <body>
@@ -86,9 +85,7 @@
     <!-- Вкладка: Избранное -->
     <div id="favs" class="page">
         <h2 class="page-title">❤️ Избранное</h2>
-        <div class="products-grid" id="favsGrid">
-            <!-- Сюда падают лайкнутые товары -->
-        </div>
+        <div class="products-grid" id="favsGrid"></div>
     </div>
 
     <!-- Вкладка: Корзина -->
@@ -99,23 +96,54 @@
 
     <!-- Вкладка: Профиль -->
     <div id="profile" class="page">
-        <h2 class="page-title">👤 Мой профиль</h2>
-        <div id="profileContent">
-            <!-- Данные из Telegram -->
-        </div>
+        <h2 class="page-title">👤 Профиль</h2>
         
-        <h3 style="margin-top: 20px;">Адрес доставки</h3>
-        <input type="text" class="profile-input" placeholder="Город, улица, дом..." id="addressInput">
-        <input type="tel" class="profile-input" placeholder="Номер телефона" id="phoneInput">
+        <!-- Блок 1: Личные данные -->
+        <div class="profile-section">
+            <h3>Личные данные</h3>
+            <div class="input-group">
+                <label>Имя</label>
+                <input type="text" class="profile-input" id="profileName" placeholder="Как к вам обращаться?">
+            </div>
+            <div class="input-group">
+                <label>Телефон</label>
+                <input type="tel" class="profile-input" id="profilePhone" placeholder="+7 (999) 000-00-00">
+            </div>
+            <div class="input-group">
+                <label>E-mail</label>
+                <input type="email" class="profile-input" id="profileEmail" placeholder="example@mail.ru">
+            </div>
+            <button class="add-btn" onclick="saveProfileData()">Сохранить данные</button>
+        </div>
+
+        <!-- Блок 2: История заказов -->
+        <div class="profile-section">
+            <h3>📦 Последние заказы</h3>
+            <div id="orderHistoryContainer">
+                <!-- Сюда в будущем будут подгружаться заказы из БД. Пока сделаем визуальную заглушку -->
+                <div class="order-history-card">
+                    <div class="order-date">12 Сентября 2026</div>
+                    <b>Заказ #1042</b><br>
+                    Alocasia 'Regal Shields' (1 шт)<br>
+                    <span style="color: var(--button-color); font-weight: bold;">1500 ₽</span> • <span style="color: green;">Доставлен</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Блок 3: Контакты и Политика -->
+        <div class="profile-section">
+            <h3>Связь с магазином</h3>
+            <!-- Замените username на ваш реальный -->
+            <a href="https://t.me/your_manager_username" target="_blank" class="contact-link">💬 Написать менеджеру в Telegram</a>
+            <a href="mailto:shop@plants.ru" class="contact-link">✉️ Написать на почту</a>
+            
+            <div class="policy-text" onclick="alert('Здесь будет текст политики конфиденциальности. Его можно разместить на отдельной странице или в модальном окне.')">
+                📄 Политика конфиденциальности и условия возврата
+            </div>
+        </div>
     </div>
 
-    <!-- Вкладка: Заказы (заглушка) -->
-    <div id="orders" class="page">
-        <h2 class="page-title">📦 Мои заказы</h2>
-        <p style="color: var(--hint-color);">Здесь появятся ваши оформленные заказы.</p>
-    </div>
-
-    <!-- Нижняя панель -->
+    <!-- Нижняя панель (убрали отдельную вкладку Заказы, так как перенесли ее в Профиль) -->
     <nav class="bottom-nav">
         <button class="nav-item active" onclick="switchTab('home')">
             <span class="nav-icon">🏠</span>Главная
@@ -126,9 +154,6 @@
         <button class="nav-item" style="position: relative;" onclick="switchTab('cart')">
             <span class="nav-icon">🛒</span>Корзина
             <span class="badge" id="cartBadge">0</span>
-        </button>
-        <button class="nav-item" onclick="switchTab('orders')">
-            <span class="nav-icon">📦</span>Заказы
         </button>
         <button class="nav-item" onclick="switchTab('profile')">
             <span class="nav-icon">👤</span>Профиль
@@ -153,36 +178,55 @@
         ];
 
         let cart = {}; 
-        let favorites = []; // Храним ID лайкнутых товаров
+        let favorites = []; 
         let currentCategory = "all";
 
-        // --- ИНИЦИАЛИЗАЦИЯ ---
+        // --- ИНИЦИАЛИЗАЦИЯ И ПРОФИЛЬ ---
         function init() {
             renderCategories();
             filterProducts();
-            renderProfile();
+            loadProfileData(); // Загружаем данные профиля при старте
         }
 
-        // --- ПРОФИЛЬ ---
-        function renderProfile() {
-            const user = tg.initDataUnsafe?.user;
-            const container = document.getElementById('profileContent');
-            
-            if (user) {
-                // Берем первую букву имени для аватарки
-                const initial = user.first_name ? user.first_name.charAt(0).toUpperCase() : "👤";
-                const username = user.username ? `@${user.username}` : '';
-                
-                container.innerHTML = `
-                    <div class="profile-card">
-                        <div class="profile-avatar">${initial}</div>
-                        <h3 class="profile-name">${user.first_name} ${user.last_name || ''}</h3>
-                        <p class="profile-username">${username}</p>
-                    </div>
-                `;
+        function loadProfileData() {
+            // Пытаемся получить данные из памяти телефона (localStorage)
+            const savedName = localStorage.getItem('profileName');
+            const savedPhone = localStorage.getItem('profilePhone');
+            const savedEmail = localStorage.getItem('profileEmail');
+
+            const nameInput = document.getElementById('profileName');
+            const phoneInput = document.getElementById('profilePhone');
+            const emailInput = document.getElementById('profileEmail');
+
+            // Если в памяти есть сохраненное имя — используем его
+            if (savedName) {
+                nameInput.value = savedName;
             } else {
-                container.innerHTML = `<p style="color: var(--hint-color);">Данные профиля доступны только внутри Telegram.</p>`;
+                // Если нет — пытаемся вытащить из Telegram
+                const tgUser = tg.initDataUnsafe?.user;
+                if (tgUser && tgUser.first_name) {
+                    nameInput.value = tgUser.first_name;
+                }
             }
+
+            if (savedPhone) phoneInput.value = savedPhone;
+            if (savedEmail) emailInput.value = savedEmail;
+        }
+
+        function saveProfileData() {
+            const name = document.getElementById('profileName').value;
+            const phone = document.getElementById('profilePhone').value;
+            const email = document.getElementById('profileEmail').value;
+
+            // Сохраняем в локальную память телефона
+            localStorage.setItem('profileName', name);
+            localStorage.setItem('profilePhone', phone);
+            localStorage.setItem('profileEmail', email);
+
+            tg.HapticFeedback.notificationOccurred('success');
+            
+            // Всплывающее уведомление внутри Telegram
+            tg.showAlert("Ваши данные успешно сохранены!");
         }
 
         // --- КАТАЛОГ И ИЗБРАННОЕ ---
@@ -215,7 +259,6 @@
             } else {
                 favorites.push(id);
             }
-            // Перерисовываем обе сетки, чтобы обновить сердечки
             filterProducts();
             renderFavorites();
         }
@@ -223,7 +266,6 @@
         function renderFavorites() {
             const favProducts = products.filter(p => favorites.includes(p.id));
             const grid = document.getElementById('favsGrid');
-            
             if (favProducts.length === 0) {
                 grid.innerHTML = '<p style="color: var(--hint-color); grid-column: 1 / -1;">Вы пока ничего не добавили в избранное.</p>';
             } else {
@@ -234,9 +276,7 @@
         function renderGrid(items, elementId) {
             const grid = document.getElementById(elementId);
             grid.innerHTML = items.map(p => {
-                const isFav = favorites.includes(p.id);
-                const heart = isFav ? '❤️' : '🤍';
-                
+                const heart = favorites.includes(p.id) ? '❤️' : '🤍';
                 return `
                 <div class="product-card">
                     <button class="fav-btn" onclick="toggleFavorite(${p.id})">${heart}</button>
@@ -252,8 +292,6 @@
         function addToCart(id) {
             cart[id] = (cart[id] || 0) + 1;
             updateCartUI();
-            
-            // Легкая вибрация телефона при добавлении товара (Telegram Haptic Feedback)
             tg.HapticFeedback.impactOccurred('light');
         }
 
@@ -324,22 +362,24 @@
             document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
             event.currentTarget.classList.add('active');
 
-            // Кнопка оплаты видна только в корзине
             if (tabId === 'cart' && Object.keys(cart).length > 0) {
                 tg.MainButton.show();
             } else {
                 tg.MainButton.hide();
             }
             
-            // Если открыли избранное - перерисовываем на всякий случай
             if (tabId === 'favs') renderFavorites();
         }
 
         tg.MainButton.onClick(function() {
+            // При оформлении заказа собираем данные прямо из полей профиля
             const orderData = {
                 items: [],
-                address: document.getElementById('addressInput').value,
-                phone: document.getElementById('phoneInput').value
+                customer: {
+                    name: document.getElementById('profileName').value,
+                    phone: document.getElementById('profilePhone').value,
+                    email: document.getElementById('profileEmail').value
+                }
             };
             
             for (const id in cart) {
@@ -352,11 +392,9 @@
                 });
             }
             
-            // Отправляем JSON обратно в бота
             tg.sendData(JSON.stringify(orderData));
         });
 
-        // Запуск
         init();
     </script>
 </body>
