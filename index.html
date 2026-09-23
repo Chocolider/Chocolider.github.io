@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Магазин Растений</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: var(--tg-theme-bg-color, #ffffff);
+            --text-color: var(--tg-theme-text-color, #000000);
+            --hint-color: var(--tg-theme-hint-color, #999999);
+            --button-color: var(--tg-theme-button-color, #3390ec);
+            --button-text: var(--tg-theme-button-text-color, #ffffff);
+            --secondary-bg: var(--tg-theme-secondary-bg-color, #f4f4f5);
+        }
+
+        body {
+            background-color: var(--bg-color); color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0; padding: 0; padding-bottom: 70px;
+        }
+
+        /* Общие стили */
+        .page { display: none; padding: 0 15px; }
+        .page.active { display: block; }
+        .page-title { padding-top: 15px; margin-bottom: 20px; }
+
+        /* Поиск и Категории */
+        .header-section { padding: 15px; position: sticky; top: 0; background: var(--bg-color); z-index: 10; }
+        .search-bar {
+            width: 100%; padding: 10px; border-radius: 10px; border: none;
+            background: var(--secondary-bg); color: var(--text-color); outline: none;
+            box-sizing: border-box; margin-bottom: 15px; font-size: 16px;
+        }
+        .categories { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+        .categories::-webkit-scrollbar { display: none; }
+        .cat-chip {
+            padding: 6px 15px; background: var(--secondary-bg); border-radius: 16px;
+            white-space: nowrap; font-size: 14px; cursor: pointer;
+        }
+        .cat-chip.active { background: var(--button-color); color: var(--button-text); }
+
+        /* Сетка товаров */
+        .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .product-card { background: var(--secondary-bg); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; position: relative; }
+        .product-img { width: 100%; height: 120px; background: #e0e0e0; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; font-size: 40px; }
+        .product-title { font-size: 14px; font-weight: bold; margin: 0 0 5px 0; }
+        .product-price { font-size: 14px; color: var(--button-color); margin-bottom: 10px; font-weight: bold;}
+        .add-btn { margin-top: auto; padding: 8px; border: none; border-radius: 8px; background: var(--button-color); color: var(--button-text); font-weight: bold; cursor: pointer; }
+        
+        /* Кнопка лайка */
+        .fav-btn { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.8); border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+        /* Элементы корзины */
+        .cart-item { display: flex; justify-content: space-between; align-items: center; background: var(--secondary-bg); padding: 15px; border-radius: 10px; margin-bottom: 10px; }
+        .cart-controls { display: flex; gap: 15px; align-items: center; }
+        .cart-btn { background: var(--button-color); color: var(--button-text); border: none; border-radius: 5px; width: 28px; height: 28px; font-weight: bold; font-size: 16px; }
+
+        /* Профиль */
+        .profile-card { background: var(--secondary-bg); padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 20px; }
+        .profile-avatar { width: 80px; height: 80px; background: var(--button-color); color: var(--button-text); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 15px auto; }
+        .profile-name { font-size: 20px; font-weight: bold; margin: 0 0 5px 0; }
+        .profile-username { color: var(--hint-color); margin: 0; }
+        .profile-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--hint-color); background: var(--bg-color); color: var(--text-color); box-sizing: border-box; margin-bottom: 15px; }
+
+        /* Нижняя навигация */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--secondary-bg); display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 12px; color: var(--hint-color); cursor: pointer; background: none; border: none; width: 20%; }
+        .nav-item.active { color: var(--button-color); }
+        .nav-icon { font-size: 20px; margin-bottom: 3px; }
+        .badge { position: absolute; top: 0; right: 20%; background: #ff3b30; color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Вкладка: Главная -->
+    <div id="home" class="page active">
+        <div class="header-section">
+            <input type="text" id="searchInput" class="search-bar" placeholder="Найти растение..." oninput="filterProducts()">
+            <div class="categories" id="categoriesContainer"></div>
+        </div>
+        <div class="products-grid" id="productsGrid"></div>
+    </div>
+
+    <!-- Вкладка: Избранное -->
+    <div id="favs" class="page">
+        <h2 class="page-title">❤️ Избранное</h2>
+        <div class="products-grid" id="favsGrid">
+            <!-- Сюда падают лайкнутые товары -->
+        </div>
+    </div>
+
+    <!-- Вкладка: Корзина -->
+    <div id="cart" class="page">
+        <h2 class="page-title">🛒 Корзина</h2>
+        <div id="cartContent"></div>
+    </div>
+
+    <!-- Вкладка: Профиль -->
+    <div id="profile" class="page">
+        <h2 class="page-title">👤 Мой профиль</h2>
+        <div id="profileContent">
+            <!-- Данные из Telegram -->
+        </div>
+        
+        <h3 style="margin-top: 20px;">Адрес доставки</h3>
+        <input type="text" class="profile-input" placeholder="Город, улица, дом..." id="addressInput">
+        <input type="tel" class="profile-input" placeholder="Номер телефона" id="phoneInput">
+    </div>
+
+    <!-- Вкладка: Заказы (заглушка) -->
+    <div id="orders" class="page">
+        <h2 class="page-title">📦 Мои заказы</h2>
+        <p style="color: var(--hint-color);">Здесь появятся ваши оформленные заказы.</p>
+    </div>
+
+    <!-- Нижняя панель -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="switchTab('home')">
+            <span class="nav-icon">🏠</span>Главная
+        </button>
+        <button class="nav-item" onclick="switchTab('favs')">
+            <span class="nav-icon">❤️</span>Избранное
+        </button>
+        <button class="nav-item" style="position: relative;" onclick="switchTab('cart')">
+            <span class="nav-icon">🛒</span>Корзина
+            <span class="badge" id="cartBadge">0</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('orders')">
+            <span class="nav-icon">📦</span>Заказы
+        </button>
+        <button class="nav-item" onclick="switchTab('profile')">
+            <span class="nav-icon">👤</span>Профиль
+        </button>
+    </nav>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand(); 
+        
+        const products = [
+            { id: 1, name: "Alocasia 'Regal Shields'", price: 1500, category: "aroids", emoji: "🌿" },
+            { id: 2, name: "Platycerium in vitro", price: 2200, category: "ferns", emoji: "🪴" },
+            { id: 3, name: "Monstera Deliciosa", price: 3500, category: "aroids", emoji: "🌴" },
+            { id: 4, name: "Филодендрон Pink Princess", price: 4000, category: "aroids", emoji: "🌸" }
+        ];
+
+        const categories = [
+            { id: "all", name: "Все" },
+            { id: "aroids", name: "Ароидные" },
+            { id: "ferns", name: "Папоротники" }
+        ];
+
+        let cart = {}; 
+        let favorites = []; // Храним ID лайкнутых товаров
+        let currentCategory = "all";
+
+        // --- ИНИЦИАЛИЗАЦИЯ ---
+        function init() {
+            renderCategories();
+            filterProducts();
+            renderProfile();
+        }
+
+        // --- ПРОФИЛЬ ---
+        function renderProfile() {
+            const user = tg.initDataUnsafe?.user;
+            const container = document.getElementById('profileContent');
+            
+            if (user) {
+                // Берем первую букву имени для аватарки
+                const initial = user.first_name ? user.first_name.charAt(0).toUpperCase() : "👤";
+                const username = user.username ? `@${user.username}` : '';
+                
+                container.innerHTML = `
+                    <div class="profile-card">
+                        <div class="profile-avatar">${initial}</div>
+                        <h3 class="profile-name">${user.first_name} ${user.last_name || ''}</h3>
+                        <p class="profile-username">${username}</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `<p style="color: var(--hint-color);">Данные профиля доступны только внутри Telegram.</p>`;
+            }
+        }
+
+        // --- КАТАЛОГ И ИЗБРАННОЕ ---
+        function renderCategories() {
+            document.getElementById('categoriesContainer').innerHTML = categories.map(c => 
+                `<div class="cat-chip ${currentCategory === c.id ? 'active' : ''}" 
+                      onclick="setCategory('${c.id}')">${c.name}</div>`
+            ).join('');
+        }
+
+        function setCategory(id) {
+            currentCategory = id;
+            renderCategories();
+            filterProducts();
+        }
+
+        function filterProducts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = products.filter(p => {
+                const matchCat = currentCategory === 'all' || p.category === currentCategory;
+                const matchQuery = p.name.toLowerCase().includes(query);
+                return matchCat && matchQuery;
+            });
+            renderGrid(filtered, 'productsGrid');
+        }
+
+        function toggleFavorite(id) {
+            if (favorites.includes(id)) {
+                favorites = favorites.filter(favId => favId !== id);
+            } else {
+                favorites.push(id);
+            }
+            // Перерисовываем обе сетки, чтобы обновить сердечки
+            filterProducts();
+            renderFavorites();
+        }
+
+        function renderFavorites() {
+            const favProducts = products.filter(p => favorites.includes(p.id));
+            const grid = document.getElementById('favsGrid');
+            
+            if (favProducts.length === 0) {
+                grid.innerHTML = '<p style="color: var(--hint-color); grid-column: 1 / -1;">Вы пока ничего не добавили в избранное.</p>';
+            } else {
+                renderGrid(favProducts, 'favsGrid');
+            }
+        }
+
+        function renderGrid(items, elementId) {
+            const grid = document.getElementById(elementId);
+            grid.innerHTML = items.map(p => {
+                const isFav = favorites.includes(p.id);
+                const heart = isFav ? '❤️' : '🤍';
+                
+                return `
+                <div class="product-card">
+                    <button class="fav-btn" onclick="toggleFavorite(${p.id})">${heart}</button>
+                    <div class="product-img">${p.emoji}</div>
+                    <p class="product-title">${p.name}</p>
+                    <p class="product-price">${p.price} ₽</p>
+                    <button class="add-btn" onclick="addToCart(${p.id})">В корзину</button>
+                </div>
+            `}).join('');
+        }
+
+        // --- КОРЗИНА ---
+        function addToCart(id) {
+            cart[id] = (cart[id] || 0) + 1;
+            updateCartUI();
+            
+            // Легкая вибрация телефона при добавлении товара (Telegram Haptic Feedback)
+            tg.HapticFeedback.impactOccurred('light');
+        }
+
+        function changeQuantity(id, delta) {
+            cart[id] += delta;
+            if (cart[id] <= 0) delete cart[id];
+            updateCartUI();
+            tg.HapticFeedback.impactOccurred('light');
+        }
+
+        function updateCartUI() {
+            const totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
+            const badge = document.getElementById('cartBadge');
+            
+            if (totalItems > 0) {
+                badge.style.display = 'block';
+                badge.innerText = totalItems;
+            } else {
+                badge.style.display = 'none';
+            }
+
+            const cartContent = document.getElementById('cartContent');
+            let html = '';
+            let totalSum = 0;
+
+            for (const id in cart) {
+                const product = products.find(p => p.id == id);
+                const qty = cart[id];
+                const sum = product.price * qty;
+                totalSum += sum;
+
+                html += `
+                    <div class="cart-item">
+                        <div>
+                            <b style="font-size: 14px;">${product.name}</b><br>
+                            <span style="color: var(--button-color); font-weight: bold;">${sum} ₽</span>
+                        </div>
+                        <div class="cart-controls">
+                            <button class="cart-btn" onclick="changeQuantity(${id}, -1)">-</button>
+                            <span style="font-weight: bold; width: 15px; text-align: center;">${qty}</span>
+                            <button class="cart-btn" onclick="changeQuantity(${id}, 1)">+</button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (totalItems === 0) {
+                cartContent.innerHTML = '<p style="color: var(--hint-color);">Ваша корзина пуста.</p>';
+                tg.MainButton.hide();
+            } else {
+                html += `<h3 style="text-align: right; margin-top: 20px;">Итого: ${totalSum} ₽</h3>`;
+                cartContent.innerHTML = html;
+                
+                tg.MainButton.setText(`Оформить заказ на ${totalSum} ₽`);
+                
+                const activeTab = document.querySelector('.nav-item.active').innerText;
+                if (activeTab.includes("Корзина")) {
+                    tg.MainButton.show();
+                }
+            }
+        }
+
+        // --- НАВИГАЦИЯ И ОТПРАВКА ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            // Кнопка оплаты видна только в корзине
+            if (tabId === 'cart' && Object.keys(cart).length > 0) {
+                tg.MainButton.show();
+            } else {
+                tg.MainButton.hide();
+            }
+            
+            // Если открыли избранное - перерисовываем на всякий случай
+            if (tabId === 'favs') renderFavorites();
+        }
+
+        tg.MainButton.onClick(function() {
+            const orderData = {
+                items: [],
+                address: document.getElementById('addressInput').value,
+                phone: document.getElementById('phoneInput').value
+            };
+            
+            for (const id in cart) {
+                const product = products.find(p => p.id == id);
+                orderData.items.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    quantity: cart[id]
+                });
+            }
+            
+            // Отправляем JSON обратно в бота
+            tg.sendData(JSON.stringify(orderData));
+        });
+
+        // Запуск
+        init();
+    </script>
+</body>
+</html>
